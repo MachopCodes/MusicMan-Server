@@ -80,6 +80,4 @@ router.patch('/reviews/:id', (req, res, next) => {
 // we need to find the musician ID
 // run the musician.remove() fucntion off that
 
-
-
 module.exports = router

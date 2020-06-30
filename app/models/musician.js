@@ -14,11 +14,11 @@ const musicianSchema = new mongoose.Schema({
     required: true
   },
   instruments: {
-    type: [String],
+    type: [],
     required: true
   },
   interests: {
-    type: String,
+    type: [String],
     required: true
   },
   blurb: {

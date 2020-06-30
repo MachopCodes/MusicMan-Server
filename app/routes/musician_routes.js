@@ -34,7 +34,7 @@ router.get('/musicians', requireToken, (req, res, next) => {
     .then(musicians => {
       // .populate('reviews.reviewer')
       // .populate('owner')
-  
+
       // `musicians` will be an array of Mongoose documents
       // we want to convert each one to a POJO, so we use `.map` to
       // apply `.toObject` to each one
@@ -59,7 +59,8 @@ router.get('/musicians/:id', requireToken, (req, res, next) => {
 })
 
 // CREATE
-// POST /musicians
+// POST
+// musicians can only be created by that user
 router.post('/musicians', requireToken, (req, res, next) => {
   // set owner of new musician to be current user
   req.body.musician.owner = req.user.id
@@ -69,6 +70,7 @@ router.post('/musicians', requireToken, (req, res, next) => {
     .then(musician => {
       res.status(201).json({ musician: musician.toObject() })
     })
+
     // if an error occurs, pass it off to our error handler
     // the error handler needs the error message and the `res` object so that it
     // can send an error message back to the client
