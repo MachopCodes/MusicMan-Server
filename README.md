@@ -1,1 +1,1 @@
-This is the server running application for musician-finder application
+This is the server running application for profile-finder application

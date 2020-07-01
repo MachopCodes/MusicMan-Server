@@ -11,7 +11,7 @@ curl "${API}${URL_PATH}/${ID}" \
 --data "review": {
     "title": "'"${TITLE}"'",
     "content": "'"${CONTENT}"'",
-    "musicianId": "'"${MUSIC_ID}"'"
+    "profileId": "'"${MUSIC_ID}"'"
   }
 }'
 

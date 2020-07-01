@@ -3,8 +3,8 @@ const express = require('express')
 // Passport docs: http://www.passportjs.org/docs/
 const passport = require('passport')
 
-// pull in Mongoose model for musicians
-const Musician = require('../models/musician')
+// pull in Mongoose model for profiles
+const Profile = require('../models/profile')
 
 // this is a collection of methods that help us detect situations when we need
 // to throw a custom error
@@ -17,7 +17,7 @@ const handle404 = customErrors.handle404
 const requireOwnership = customErrors.requireOwnership
 
 // this is middleware that will remove blank fields from `req.body`, e.g.
-// { musician: { title: '', text: 'foo' } } -> { musician: { text: 'foo' } }
+// { profile: { title: '', text: 'foo' } } -> { profile: { text: 'foo' } }
 const removeBlanks = require('../../lib/remove_blank_fields')
 // passing this as a second argument to `router.<verb>` will make it
 // so that a token MUST be passed for that route to be available
@@ -29,34 +29,34 @@ const router = express.Router()
 // Create function POST a review with cURL scrip params
 router.post('/reviews', (req, res, next) => {
   // get the review data from the body of the request
-  // get the musician id from the review reviewData
-  // find the musician by it's ID
+  // get the profile id from the review reviewData
+  // find the profile by it's ID
   const reviewData = req.body.review
-  const musicianId = reviewData.musicianId
-  Musician.findById(musicianId)
-    .then((musician) => {
+  const profileId = reviewData.profileId
+  Profile.findById(profileId)
+    .then((profile) => {
       // add subdoc to parent document
-      musician.reviews.push(reviewData)
+      profile.reviews.push(reviewData)
       // save parent document
-      return musician.save()
+      return profile.save()
     })
-    .then(musician => res.status(201).json({
-      musician: musician
+    .then(profile => res.status(201).json({
+      profile: profile
     }))
     // send response back to slient
-    // .then(musician =>)
+    // .then(profile =>)
     .catch(next)
 })
 
 router.delete('/reviews/:id', (req, res, next) => {
   const id = req.params.id
   const reviewData = req.body.review
-  const musicianId = reviewData.musicianId
-  Musician.findById(musicianId)
+  const profileId = reviewData.profileId
+  Profile.findById(profileId)
     .then(handle404)
-    .then(musician => {
-      musician.reviews.id(id).remove()
-      return musician.save()
+    .then(profile => {
+      profile.reviews.id(id).remove()
+      return profile.save()
     })
     .then(() => res.sendStatus(204))
     .catch(next)
@@ -65,19 +65,19 @@ router.delete('/reviews/:id', (req, res, next) => {
 router.patch('/reviews/:id', (req, res, next) => {
   const id = req.params.id
   const reviewData = req.body.review
-  const musicianId = reviewData.musicianId
-  Musician.findById(musicianId)
+  const profileId = reviewData.profileId
+  Profile.findById(profileId)
     .then(handle404)
-    .then(musician => {
-      musician.reviews.id(id).set(reviewData)
-      return musician.save()
+    .then(profile => {
+      profile.reviews.id(id).set(reviewData)
+      return profile.save()
     })
     .then(() => res.sendStatus(204))
     .catch(next)
 })
 
 //We are destroying a REVIEW
-// we need to find the musician ID
-// run the musician.remove() fucntion off that
+// we need to find the profile ID
+// run the profile.remove() fucntion off that
 
 module.exports = router

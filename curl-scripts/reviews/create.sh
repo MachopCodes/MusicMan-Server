@@ -12,7 +12,7 @@ curl "${API}${URL_PATH}" \
     "review": {
         "title": "'"${TITLE}"'",
         "content": "'"${CONTENT}"'",
-        "musicianId": "'"${MUSIC_ID}"'",
+        "profileId": "'"${MUSIC_ID}"'",
         "reviewer": "'"${USER_ID}"'"
       }
   }'

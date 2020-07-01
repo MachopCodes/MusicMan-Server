@@ -9,7 +9,7 @@ const reviewSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  musicianId: {
+  profileId: {
     type: String,
     required: true
   },

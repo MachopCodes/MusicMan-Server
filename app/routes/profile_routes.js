@@ -3,8 +3,8 @@ const express = require('express')
 // Passport docs: http://www.passportjs.org/docs/
 const passport = require('passport')
 
-// pull in Mongoose model for musicians
-const Musician = require('../models/musician')
+// pull in Mongoose model for profiles
+const Profile = require('../models/profile')
 
 // this is a collection of methods that help us detect situations when we need
 // to throw a custom error
@@ -17,7 +17,7 @@ const handle404 = customErrors.handle404
 const requireOwnership = customErrors.requireOwnership
 
 // this is middleware that will remove blank fields from `req.body`, e.g.
-// { musician: { title: '', text: 'foo' } } -> { musician: { text: 'foo' } }
+// { profile: { title: '', text: 'foo' } } -> { profile: { text: 'foo' } }
 const removeBlanks = require('../../lib/remove_blank_fields')
 // passing this as a second argument to `router.<verb>` will make it
 // so that a token MUST be passed for that route to be available
@@ -28,47 +28,48 @@ const requireToken = passport.authenticate('bearer', { session: false })
 const router = express.Router()
 
 // INDEX
-// GET /musicians
-router.get('/musicians', requireToken, (req, res, next) => {
-  Musician.find()
-    .then(musicians => {
+// GET /profiles
+router.get('/profiles', requireToken, (req, res, next) => {
+  Profile.find({'owner': req.user.id})
+    .then(profiles => {
       // .populate('reviews.reviewer')
       // .populate('owner')
 
-      // `musicians` will be an array of Mongoose documents
+      // `profiles` will be an array of Mongoose documents
       // we want to convert each one to a POJO, so we use `.map` to
       // apply `.toObject` to each one
-      return musicians.map(musician => musician.toObject())
+      return profiles.map(profile => profile.toObject())
     })
-    // respond with status 200 and JSON of the musicians
-    .then(musicians => res.status(200).json({ musicians: musicians }))
+    // respond with status 200 and JSON of the profiles
+    .then(profiles => res.status(200).json({ profiles: profiles }))
     // if an error occurs, pass it to the handler
     .catch(next)
 })
 
 // SHOW
-// GET /musicians/5a7db6c74d55bc51bdf39793
-router.get('/musicians/:id', requireToken, (req, res, next) => {
+// GET /profiles/5a7db6c74d55bc51bdf39793
+router.get('/profiles/:id', requireToken, (req, res, next) => {
   // req.params.id will be set based on the `:id` in the route
-  Musician.findById(req.params.id)
+  Profile.findById(req.params.id)
     .then(handle404)
-    // if `findById` is succesful, respond with 200 and "musician" JSON
-    .then(musician => res.status(200).json({ musician: musician.toObject() }))
+    // if `findById` is succesful, respond with 200 and "profile" JSON
+    .then(profile => res.status(200).json({ profile: profile.toObject() }))
     // if an error occurs, pass it to the handler
     .catch(next)
 })
 
 // CREATE
 // POST
-// musicians can only be created by that user
-router.post('/musicians', requireToken, (req, res, next) => {
-  // set owner of new musician to be current user
-  req.body.musician.owner = req.user.id
-
-  Musician.create(req.body.musician)
-    // respond to succesful `create` with status 201 and JSON of new "musician"
-    .then(musician => {
-      res.status(201).json({ musician: musician.toObject() })
+// profiles can only be created by that user
+router.post('/profiles', requireToken, (req, res, next) => {
+  //console.log(req.user.id)
+  // set owner of new profile to be current user
+  req.body.profile.owner = req.user.id
+  // console.log(req.body.profile.owner)
+  Profile.create(req.body.profile)
+    // respond to succesful `create` with status 201 and JSON of new "profile"
+    .then(profile => {
+      res.status(201).json({ profile: profile.toObject() })
     })
 
     // if an error occurs, pass it off to our error handler
@@ -78,21 +79,21 @@ router.post('/musicians', requireToken, (req, res, next) => {
 })
 
 // UPDATE
-// PATCH /musicians/5a7db6c74d55bc51bdf39793
-router.patch('/musicians/:id', requireToken, removeBlanks, (req, res, next) => {
+// PATCH /profiles/5a7db6c74d55bc51bdf39793
+router.patch('/profiles/:id', requireToken, removeBlanks, (req, res, next) => {
   // if the client attempts to change the `owner` property by including a new
   // owner, prevent that by deleting that key/value pair
-  delete req.body.musician.owner
+  delete req.body.profile.owner
 
-  Musician.findById(req.params.id)
+  Profile.findById(req.params.id)
     .then(handle404)
-    .then(musician => {
+    .then(profile => {
       // pass the `req` object and the Mongoose record to `requireOwnership`
       // it will throw an error if the current user isn't the owner
-      requireOwnership(req, musician)
+      requireOwnership(req, profile)
 
       // pass the result of Mongoose's `.update` to the next `.then`
-      return musician.updateOne(req.body.musician)
+      return profile.updateOne(req.body.profile)
     })
     // if that succeeded, return 204 and no JSON
     .then(() => res.sendStatus(204))
@@ -101,15 +102,15 @@ router.patch('/musicians/:id', requireToken, removeBlanks, (req, res, next) => {
 })
 
 // DESTROY
-// DELETE /musicians/5a7db6c74d55bc51bdf39793
-router.delete('/musicians/:id', requireToken, (req, res, next) => {
-  Musician.findById(req.params.id)
+// DELETE /profiles/5a7db6c74d55bc51bdf39793
+router.delete('/profiles/:id', requireToken, (req, res, next) => {
+  Profile.findById(req.params.id)
     .then(handle404)
-    .then(musician => {
-      // throw an error if current user doesn't own `musician`
-      requireOwnership(req, musician)
-      // delete the musician ONLY IF the above didn't throw
-      musician.deleteOne()
+    .then(profile => {
+      // throw an error if current user doesn't own `profile`
+      requireOwnership(req, profile)
+      // delete the profile ONLY IF the above didn't throw
+      profile.deleteOne()
     })
     // send back 204 and no content if the deletion succeeded
     .then(() => res.sendStatus(204))

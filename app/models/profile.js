@@ -1,6 +1,7 @@
 const mongoose = require('mongoose')
 const reviewSchema = require('./review')
-const musicianSchema = new mongoose.Schema({
+
+const profileSchema = new mongoose.Schema({
   state: {
     type: String,
     required: true
@@ -13,14 +14,14 @@ const musicianSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  instruments: {
-    type: [],
+  instruments: [{
+    type: String,
     required: true
-  },
-  interests: {
-    type: [String],
+  }],
+  interests: [{
+    type: String,
     required: true
-  },
+  }],
   blurb: {
     type: String
   },
@@ -34,4 +35,4 @@ const musicianSchema = new mongoose.Schema({
   timestamps: true
 })
 
-module.exports = mongoose.model('Musician', musicianSchema)
+module.exports = mongoose.model('Profile', profileSchema)

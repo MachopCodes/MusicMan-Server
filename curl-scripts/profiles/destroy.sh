@@ -1,11 +1,11 @@
-#!/bin/sh
+#!/bin/bash
 
 API="http://localhost:4741"
-URL_PATH="/musicians"
+URL_PATH="/profiles"
 
 curl "${API}${URL_PATH}/${ID}" \
   --include \
-  --request GET \
+  --request DELETE \
   --header "Authorization: Bearer ${TOKEN}"
 
 echo
