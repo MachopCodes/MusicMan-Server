@@ -34,8 +34,6 @@ router.get('/profiles', requireToken, (req, res, next) => {
     .then(profiles => {
       .populate('reviews.reviewer')
       .populate('owner')
-      .populate('owner.email')
-
       // `profiles` will be an array of Mongoose documents
       // we want to convert each one to a POJO, so we use `.map` to
       // apply `.toObject` to each one
