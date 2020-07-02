@@ -30,10 +30,10 @@ const router = express.Router()
 // INDEX
 // GET /profiles
 router.get('/profiles', requireToken, (req, res, next) => {
-  Profile.find({'owner': req.user.id})
+  Profile.find()
     .then(profiles => {
-      .populate('reviews.reviewer')
-      .populate('owner')
+      // .populate('reviews.reviewer')
+      // .populate('owner')
       // `profiles` will be an array of Mongoose documents
       // we want to convert each one to a POJO, so we use `.map` to
       // apply `.toObject` to each one
@@ -83,7 +83,7 @@ router.patch('/profiles/:id', requireToken, removeBlanks, (req, res, next) => {
   // if the client attempts to change the `owner` property by including a new
   // owner, prevent that by deleting that key/value pair
   delete req.body.profile.owner
-
+  console.log(req.params)
   Profile.findById(req.params.id)
     .then(handle404)
     .then(profile => {
