@@ -10,9 +10,9 @@ curl "${API}${URL_PATH}" \
   --header "Authorization: Bearer ${TOKEN}" \
   --data '{
     "profile": {
-      "state": "'"${STATE}"'",
-      "city": "'"${CITY}"'",
-      "zipCode": "'"${ZIP}"'",
+      "name": "'"${NAME}"'",
+      "contact": "'"${CONTACT}"'",
+      "location": "'"${LOCATION}"'",
       "instruments": "'"${INSTRUMENTS}"'",
       "interests": "'"${INTERESTS}"'",
       "blurb": "'"${BLURB}"'"

@@ -2,15 +2,15 @@ const mongoose = require('mongoose')
 const reviewSchema = require('./review')
 
 const profileSchema = new mongoose.Schema({
-  state: {
+  name: {
     type: String,
     required: true
   },
-  city: {
+  contact: {
     type: String,
     required: true
   },
-  zipCode: {
+  location: {
     type: String,
     required: true
   },
