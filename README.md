@@ -14,8 +14,8 @@ Passport
 
 
 Unsolved Problems:
-Create a method to search for profiles based on criteria.
-Create a method to post reviews for other accounts with CRUD functionalities. 
+Create routes to listen for specific searches. 
+Ideally, the site would allow the user to search by different criterias, and ideally would send a GET request / listen for a GET request only for specific criteria, vs. indexing the entire database. 
 
 ![Entity Relationship diagram](https://github.com/MachopCodes/musician-finder-server/blob/master/FullStack%20ERD.PNG)
 
