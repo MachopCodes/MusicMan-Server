@@ -2,7 +2,7 @@
 
 **Application:** https://machopcodes.github.io/musician-finder-client/
 
-**GitHub Client Repo:** https://machopcodes.github.io/musician-finder-client/   
+**GitHub Client Repo:** https://github.com/MachopCodes/musician-finder-client  
 
 **Production Environment:** https://stormy-taiga-24589.herokuapp.com
 
